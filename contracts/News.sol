@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.17;
 
-contract myContract {
+contract SourceTrackingContract {
     // event Verify(string newsURL, string sourceURL, string state);
     event Upload(string newsURL, string sourceURL, uint256 newsId, address provider);
     // event GetURLs(string newsURL, string sourceURL, address provider);
@@ -49,15 +49,28 @@ contract myContract {
         emit Receive(msg.sender, msg.value);
     }
 
+    function test2() pure public {
+        uint happy = 0;
+        happy += 1;
+    }
+
+    function test4(uint k) public returns(uint n) {
+        return k+1;
+    }
+
+    function testHello() view public returns(uint256 number, address user) {
+        return(100, msg.sender);
+    }
+
     function addAccount(address account) public {
         require(msg.sender == manager, "ERROR: only manager can add account.");
-        require(!_isAuthorized[account], "ERROR: this account has been verified.");
+        require(!_isAuthorized[account], "ERROR: this account has been authorized.");
         _isAuthorized[account] = true;
         emit AccountAuthorized(account);
     }
 
-    modifier onlyVerified() {
-        require(_isAuthorized[msg.sender], "ERROR: only verified account can access this function.");
+    modifier onlyAuthorized() {
+        require(_isAuthorized[msg.sender], "ERROR: only authorized account can access this function.");
         _;
     }
 
@@ -72,21 +85,21 @@ contract myContract {
             return "Denied";
     }
 
-    function getLevel() onlyVerified view public returns(uint256 level, uint256 mistake) {
+    function getLevel() onlyAuthorized public returns(uint256 level, uint256 mistake) {
         return (_voterLevel[msg.sender][0], _voterLevel[msg.sender][1]);
     }
 
-    function getBalance() onlyVerified view public returns(uint256 balance) {
+    function getBalance() onlyAuthorized view public returns(uint256 balance) {
         return _givenEther[msg.sender];
     }
 
-    function withdraw(uint256 amount) onlyVerified public {
+    function withdraw(uint256 amount) onlyAuthorized public {
         
         require(amount <= _givenEther[msg.sender], "ERROR: not enough ether");
         _withdraw(amount);
     }
 
-    function withdrawAll() onlyVerified public {
+    function withdrawAll() onlyAuthorized public {
         _withdraw(_givenEther[msg.sender]);
     }
 
@@ -97,7 +110,7 @@ contract myContract {
         emit Reward(Receiver, amount);
     }
     
-    function upload(string memory newsURL_, string memory sourceURL_) onlyVerified public returns (uint256 newsId) {
+    function upload(string memory newsURL_, string memory sourceURL_) onlyAuthorized public returns (uint256 newsId) {
         uint256 _newsId = ++totalNews;
         _providers[_newsId] = msg.sender;
         _news[_newsId] = News(_newsId, newsURL_, sourceURL_, 0, 0, new address[](0), new address[](0), newsState.CHECKING);
@@ -107,7 +120,7 @@ contract myContract {
         return _newsId;
     }
 
-    function managerUpload(string memory newsURL_, string memory sourceURL_) onlyVerified public returns (uint256 newsId) {
+    function managerUpload(string memory newsURL_, string memory sourceURL_) onlyAuthorized public returns (uint256 newsId) {
         require(msg.sender == manager, "ERROR: only manager can access this function.");
         uint256 _newsId = ++totalNews;
         _providers[_newsId] = msg.sender;
@@ -125,7 +138,7 @@ contract myContract {
         return (_news[newsId_].approve, _news[newsId_].deny);
     }
 
-    function vote(uint256 newsId, bool approve) onlyVerified public {
+    function vote(uint256 newsId, bool approve) onlyAuthorized public {
         address voter = msg.sender;
         require(_providers[newsId] != address(0), "ERROR: newsId is invalid");
         require(voter != _providers[newsId], "ERROR: provider cannot vote");

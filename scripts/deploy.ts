@@ -3,7 +3,7 @@ import { ethers } from "hardhat";
 async function main() {
   const lockedAmount = ethers.parseEther("0.001");
 
-  const news = await ethers.deployContract("myContract", [], {
+  const news = await ethers.deployContract("SourceTrackingContract", [], {
     value: lockedAmount,
   });
 

@@ -26,6 +26,15 @@ npx hardhat compile
 3. [Writing Tests 2](https://hardhat.org/hardhat-runner/docs/guides/tasks-and-scripts)
 4. [Test Example from Our Demo Project](https://github.com/YTP-GurasBottomTeeth/ytp-demo/blob/master/test/election.js)
 
+### Using Hardhat Console
+```
+npx hardhat console
+
+> const contract = await ethers.getContractAt(contract_name, contract_address)
+> contract.interface.fragments   //listing all functions and events
+> await contract.[function or event name]()   //calling function or event
+```
+
 ### Deploying Smart Contract
 
 #### Live Network
@@ -33,6 +42,10 @@ npx hardhat compile
 
 #### Local Network
 ```
-npx hardhat --network localhost run scripts/deploy.js
+npx hardhat --network localhost run scripts/deploy.ts
 ```
 Remember to start a local blockchain before deploying contracts.
+
+### MAGIC
+1. [MAGIC 1](https://stackoverflow.com/questions/76607233/error-could-not-decode-result-data-value-0x-info-method-getcreatorcou)
+2. [Abi Data Decoder](https://www.moesif.com/solidity-abi-hex-decoder/decode)
