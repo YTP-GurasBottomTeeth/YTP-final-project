@@ -11,7 +11,7 @@ contract SourceTrackingContract {
     event Receive(address provider, uint256 amount);
     event Withdraw(address receiver, uint256 amount);
     event Reward(address receiver, uint256 amount);
-    // event Level(uint256 level, uint256 mistake);
+    event Level(uint256 level, uint256 mistake);
     event AccountAuthorized(address account);
 
     enum newsState {CHECKING, APPROVED, DENIED}
@@ -49,18 +49,23 @@ contract SourceTrackingContract {
         emit Receive(msg.sender, msg.value);
     }
 
+    function testHello() view public returns(uint256 number, address user) {
+        return(100, msg.sender);
+    }
+  
     function test2() pure public {
         uint happy = 0;
         happy += 1;
     }
 
-    function test4(uint k) public returns(uint n) {
+    function test3(uint k) pure public {
+        k += 1;
+    }
+
+    function test4(uint k) pure public returns(uint n) {
         return k+1;
     }
 
-    function testHello() view public returns(uint256 number, address user) {
-        return(100, msg.sender);
-    }
 
     function addAccount(address account) public {
         require(msg.sender == manager, "ERROR: only manager can add account.");
@@ -86,6 +91,7 @@ contract SourceTrackingContract {
     }
 
     function getLevel() onlyAuthorized public returns(uint256 level, uint256 mistake) {
+        emit Level(_voterLevel[msg.sender][0], _voterLevel[msg.sender][1]);
         return (_voterLevel[msg.sender][0], _voterLevel[msg.sender][1]);
     }
 
