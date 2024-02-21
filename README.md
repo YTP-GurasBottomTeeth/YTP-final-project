@@ -50,3 +50,8 @@ Remember to start a local blockchain before deploying contracts.
 1. [MAGIC 1](https://stackoverflow.com/questions/76607233/error-could-not-decode-result-data-value-0x-info-method-getcreatorcou)
 2. [Abi Data Decoder](https://www.moesif.com/solidity-abi-hex-decoder/decode)
 3. [Abi Data Decoder II](https://bia.is/tools/abi-decoder/)
+
+### TODO
+- 上傳者：輸入網址*2、輸出新聞id(系統分配的)
+- 投票者：輸出網址*2、投票
+- 檢查者：輸入新聞id 、輸出驗證是否成功
