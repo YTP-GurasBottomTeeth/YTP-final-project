@@ -3,7 +3,7 @@
 import { AbstractProvider } from "ethers";
 import { BrowserProvider } from "ethers";
 import { Signer } from "ethers";
-import AccountInfo from "@/components/accountInfo";
+import AccountInfo from "@/components/account/accountInfo";
 import { useRef } from "react";
 import ConnetWallet from "@/components/connectWallet";
 

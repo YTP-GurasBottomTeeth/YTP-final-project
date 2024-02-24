@@ -22,13 +22,13 @@ export default function AccountInfo({ provider, signer }: ComponentAttr) {
     const getBalance = async () => {
       const signerAddress = await signer.current?.getAddress()
       if(signerAddress === undefined) {
-        alert('signerAddress is undefined')
+        // alert('signerAddress is undefined')
         return
       }
       setAddress(signerAddress)
       const signerBalance = await provider.current?.getBalance(signerAddress)
       if(signerBalance === undefined) {
-        alert('signerBalance is undefined')
+        // alert('signerBalance is undefined')
         return
       }
       setBalance(formatBalance(signerBalance))

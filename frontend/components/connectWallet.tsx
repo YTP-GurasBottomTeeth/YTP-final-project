@@ -23,7 +23,7 @@ export default function ConnetWallet({ provider, signer }: ComponentAttr) {
   return (
     <>
       <div>
-        <button onClick={onClick}>{'Connect Wallect'}</button>
+        <button onClick={onClick}>{'Connect Wallet'}</button>
       </div>
       <div>
         <span>{'Wallet Status: '}</span>

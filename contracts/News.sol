@@ -2,17 +2,18 @@
 pragma solidity ^0.8.17;
 
 contract SourceTrackingContract {
-    // event Verify(string newsURL, string sourceURL, string state);
-    event Upload(string newsURL, string sourceURL, uint256 newsId, address provider);
-    // event GetURLs(string newsURL, string sourceURL, address provider);
+    event Verify(string indexed newsURL, string indexed sourceURL, string indexed state);
+    event Upload(string indexed newsURL, string indexed sourceURL, uint256 indexed newsId, address provider);
+    event Balance(uint256 indexed balance);
+    event GetURLs(string indexed newsURL, string indexed sourceURL, address indexed provider);
     // event GetVotes(uint256 approve, uint256 deny);
-    event NewsApproved(uint256 newsId);
-    event NewsDenied(uint256 newsId);
-    event Receive(address provider, uint256 amount);
-    event Withdraw(address receiver, uint256 amount);
-    event Reward(address receiver, uint256 amount);
-    event Level(uint256 level, uint256 mistake);
-    event AccountAuthorized(address account);
+    event NewsApproved(uint256 indexed newsId);
+    event NewsDenied(uint256 indexed newsId);
+    event Receive(address indexed provider, uint256 indexed amount);
+    event Withdraw(address indexed receiver, uint256 indexed amount);
+    event Reward(address indexed receiver, uint256 indexed amount);
+    event Level(uint256 indexed level, uint256 indexed mistake);
+    event AccountAuthorized(address indexed account);
 
     enum newsState {CHECKING, APPROVED, DENIED}
 
@@ -49,23 +50,7 @@ contract SourceTrackingContract {
         emit Receive(msg.sender, msg.value);
     }
 
-    function testHello() view public returns(uint256 number, address user) {
-        return(100, msg.sender);
-    }
-  
-    function test2() pure public {
-        uint happy = 0;
-        happy += 1;
-    }
-
-    function test3(uint k) pure public {
-        k += 1;
-    }
-
-    function test4(uint k) pure public returns(uint n) {
-        return k+1;
-    }
-
+    fallback() external payable {}
 
     function addAccount(address account) public {
         require(msg.sender == manager, "ERROR: only manager can add account.");
@@ -79,15 +64,19 @@ contract SourceTrackingContract {
         _;
     }
 
-    function verify(uint256 newsId) view public returns(string memory state) {
+    function verify(uint256 newsId) public returns(string memory state) {
         require(_providers[newsId] != address(0), "ERROR: newsId is invalid");
-
-        if(_news[newsId].state == newsState.CHECKING)        
+        
+        if(_news[newsId].state == newsState.CHECKING) {
+            emit Verify(_news[newsId].newsURL, _news[newsId].sourceURL, "Checking");
             return "Checking";
-        else if(_news[newsId].state == newsState.APPROVED)
+        } else if(_news[newsId].state == newsState.APPROVED) {
+            emit Verify(_news[newsId].newsURL, _news[newsId].sourceURL, "Approved");
             return "Approved";
-        else if(_news[newsId].state == newsState.DENIED)
+        } else if(_news[newsId].state == newsState.DENIED) {
+            emit Verify(_news[newsId].newsURL, _news[newsId].sourceURL, "Denied");
             return "Denied";
+        }
     }
 
     function getLevel() onlyAuthorized public returns(uint256 level, uint256 mistake) {
@@ -95,7 +84,8 @@ contract SourceTrackingContract {
         return (_voterLevel[msg.sender][0], _voterLevel[msg.sender][1]);
     }
 
-    function getBalance() onlyAuthorized view public returns(uint256 balance) {
+    function getBalance() onlyAuthorized public returns(uint256 balance) {
+        emit Balance(_givenEther[msg.sender]);
         return _givenEther[msg.sender];
     }
 
@@ -122,7 +112,7 @@ contract SourceTrackingContract {
         _news[_newsId] = News(_newsId, newsURL_, sourceURL_, 0, 0, new address[](0), new address[](0), newsState.CHECKING);
         require(_givenEther[msg.sender] >= 1 ether, "ERROR: not enough ether to upload");
         _givenEther[msg.sender] -= 1 ether;
-        // emit Upload(newsURL_, sourceURL_, _newsId, _providers[_newsId]);
+        emit Upload(newsURL_, sourceURL_, _newsId, _providers[_newsId]);
         return _newsId;
     }
 
@@ -131,18 +121,20 @@ contract SourceTrackingContract {
         uint256 _newsId = ++totalNews;
         _providers[_newsId] = msg.sender;
         _news[_newsId] = News(_newsId, newsURL_, sourceURL_, 0, 0, new address[](0), new address[](0), newsState.CHECKING);
+        emit Upload(newsURL_, sourceURL_, _newsId, _providers[_newsId]);
         return _newsId;
     }
 
-    function getURLs(uint256 newsId_) view public returns (string memory newsURL, string memory sourceURL) {
+    function getURLs(uint256 newsId_) public returns (string memory newsURL, string memory sourceURL) {
         require(_providers[newsId_] != address(0), "ERROR: newsId is invalid");
+        emit GetURLs(newsURL, sourceURL, _providers[newsId_]);
         return (_news[newsId_].newsURL, _news[newsId_].sourceURL);
     }
 
-    function getVotes(uint256 newsId_) view public returns (uint256 approve, uint256 deny) {
-        require(_providers[newsId_] != address(0), "ERROR: newsId is invalid");
-        return (_news[newsId_].approve, _news[newsId_].deny);
-    }
+    // function getVotes(uint256 newsId_) view public returns (uint256 approve, uint256 deny) {
+    //     require(_providers[newsId_] != address(0), "ERROR: newsId is invalid");
+    //     return (_news[newsId_].approve, _news[newsId_].deny);
+    // }
 
     function vote(uint256 newsId, bool approve) onlyAuthorized public {
         address voter = msg.sender;

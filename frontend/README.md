@@ -9,6 +9,90 @@ You MUST install dependencies although you have run it in the parent directory.
 npm install
 ```
 
+## Reference
+
+### `@/lib/type.ts`
+```ts
+type ReactUseState<S> = Dispatch<SetStateAction<S | null>>
+type ReactUseRef<S> = MutableRefObject<S | null>
+```
+
+### `@/components/connectWallet.tsx`
+#### `<ConnectWallet provider={} signer={} />`
+- provider: `ReactUseRef<BrowserProvider | AbstractProvider>`
+- signer: `ReactUseRef<Signer>`
+
+Example
+```tsx
+import ConnetWallet from "@/components/connectWallet"
+
+function component() {
+  const provider = useRef<BrowserProvider | AbstractProvider | null>(null)
+  const signer = useRef<Signer | null>(null)
+
+  return (
+    <>
+      <ConnectWallet provider={provider} signer={signer} />
+    </>
+  )
+}
+```
+
+### `@/lib/connectContract.ts`
+#### `connectContract(owner: Signer | BrowserProvider | AbstractProvider)`
+Function for connecting to contract. **If you only want to connect to the contract, use `<ConnectContract />` instead.**
+
+Example
+```ts
+const contract = useRef<Contract | null>(null)
+const isContractConnected = useRef<boolean>(false)
+
+useEffect(() => {
+  const interval = setInterval(() => {
+    if(!isContractConnected.current) {
+      if(signer.current) {
+        contract.current = connectContract(signer.current)
+      }
+      isContractConnected.current = true
+    }
+  }, 1000)
+
+  return () => {
+    clearInterval(interval)
+  }
+}, [])
+```
+
+### `@/components/connectContract.tsx`
+#### `<ConnectContract contract={} signer={} />`
+- contract: `ReactUseRef<Contract>`
+- signer: `ReactUseRef<Signer>`
+
+Example
+```tsx
+import ConnetContract from "@/components/connectContract"
+
+function component() {
+  const contract = useRef<Contract | null>(null)
+  const signer = useRef<Signer | null>(null)
+
+  return (
+    <>
+      <ConnectContract contract={contract} signer={signer} />
+    </>
+  )
+}
+```
+
+
+### `@/lib/contractInfo.ts`
+#### `contractAddress`
+The contract address. **May need to modify after deployment.**
+
+#### `contractAbi`
+The contract ABI.
+
+
 ## Getting Started
 
 First, run the development server:
