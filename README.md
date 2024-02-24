@@ -8,6 +8,19 @@ Please run `npm install` in your terminal.
 ### Typescript
 [LINK](https://hardhat.org/hardhat-runner/docs/guides/typescript)
 
+### Next.js
+1. [Creating layouts and pages](https://nextjs.org/learn/dashboard-app/creating-layouts-and-pages)
+2. [Project Struture](https://www.youtube.com/watch?v=FmerxXWD66g&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=3)
+3. [Routing](https://www.youtube.com/watch?v=Vm7qM1wmXwE&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=5)
+4. [Private Folder](https://www.youtube.com/watch?v=nQKtuiccMLs&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=12)
+5. [Layout](https://www.youtube.com/watch?v=f93g238p9tM&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=14)
+6. [CSR (Client Side Rendering)](https://www.youtube.com/watch?v=OXrNQPhzH84&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=46)
+7. [SSR (Server Side Rendering)](https://www.youtube.com/watch?v=3e017ih7pOA&list=PLC3y8-rFHvwjOKd6gdf4QtV1uYNiQnruI&index=47)
+8. [Docs](https://nextjs.org/docs)
+9. [`useRef` vs `useState`](https://medium.com/web-development-with-sumit/useref-vs-usestate-in-react-330539025245)
+10. [`useEffect`](https://hackmd.io/@Heidi-Liu/note-fe302-hooks-useeffect)
+
+
 ### Start a Local Blockchain Network
 ```
 npx hardhat node
