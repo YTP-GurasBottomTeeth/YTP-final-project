@@ -70,5 +70,4 @@ Remember to start a local blockchain before deploying contracts.
 - 檢查者：輸入新聞id 、輸出驗證是否成功
 - 看懂為什麼有view就會ERROR
 - 讀取require的錯誤訊息 - 我猜是try-catch
-- 讀取被emit的event
 - 寫前端

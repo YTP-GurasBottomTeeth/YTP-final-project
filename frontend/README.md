@@ -64,9 +64,11 @@ useEffect(() => {
 ```
 
 ### `@/components/connectContract.tsx`
-#### `<ConnectContract contract={} signer={} />`
+#### `<ConnectContract contract={} signer={} init={} />`
 - contract: `ReactUseRef<Contract>`
 - signer: `ReactUseRef<Signer>`
+- init: `() => void`
+  - The init function after contract constructed.
 
 Example
 ```tsx
@@ -78,12 +80,26 @@ function component() {
 
   return (
     <>
-      <ConnectContract contract={contract} signer={signer} />
+      <ConnectContract contract={contract} signer={signer} init={initFunc} />
     </>
   )
 }
 ```
 
+### `@/lib/callTransaction.ts`
+#### `callTransaction(contract: Contract, funcName: string, args: any[]): Promise<any[]>`
+A helper function for calling non view function from solidity.
+
+```ts
+try {
+  const ret = await callTransaction(contract, 'upload', ['william', 'killer'])
+  const [newsIdNumber] = ret
+
+  console.log(await contract.current?.getURLs(newsIdNumber))
+} catch(err) {
+  console.log(err)
+}
+```
 
 ### `@/lib/contractInfo.ts`
 #### `contractAddress`

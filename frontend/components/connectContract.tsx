@@ -6,7 +6,13 @@ import { Signer } from "ethers";
 import { Contract } from "ethers";
 import { useEffect, useRef } from "react";
 
-export function ConnectContract({ contract, signer }: { contract: ReactUseRef<Contract>, signer: ReactUseRef<Signer> }) {
+type AttrType = {
+  contract: ReactUseRef<Contract>,
+  signer: ReactUseRef<Signer>,
+  init: () => void
+}
+
+export function ConnectContract({ contract, signer, init }: AttrType) {
   const isContractConnected = useRef<boolean>(false)
 
   useEffect(() => {
@@ -15,6 +21,8 @@ export function ConnectContract({ contract, signer }: { contract: ReactUseRef<Co
         if(signer.current) {
           contract.current = connectContract(signer.current)
           isContractConnected.current = true
+          console.log('YESSSSSS')
+          init()
         }
       }
     }, 1000)
