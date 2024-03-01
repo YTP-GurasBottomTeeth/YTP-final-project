@@ -90,6 +90,7 @@ function component() {
 #### `callTransaction(contract: Contract, funcName: string, args: any[]): Promise<any[]>`
 A helper function for calling non view function from solidity.
 
+Example
 ```ts
 try {
   const ret = await callTransaction(contract, 'upload', ['william', 'killer'])
