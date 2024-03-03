@@ -2,16 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { ReactUseRef } from "@/lib/type"
-import { BrowserProvider, ethers } from "ethers"
-import { AbstractProvider } from "ethers"
-import { Signer } from "ethers"
+import { AbstractProvider, BrowserProvider, Signer, ethers } from "ethers"
 
-type ComponentAttr = {
-  provider: ReactUseRef<BrowserProvider | AbstractProvider | null>,
-  signer: ReactUseRef<Signer | null>
+type CompAttr = {
+  provider: ReactUseRef<BrowserProvider | AbstractProvider>,
+  signer: ReactUseRef<Signer>,
 }
 
-export default function AccountInfo({ provider, signer }: ComponentAttr) {
+export default function AccountInfo({ provider, signer }: CompAttr) {
   const [balance, setBalance] = useState<string>("")
   const [address, setAddress] = useState<string>("")
 

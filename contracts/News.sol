@@ -13,7 +13,7 @@ contract SourceTrackingContract {
     // event Withdraw(address indexed receiver, uint256 indexed amount);
     // event Reward(address indexed receiver, uint256 indexed amount);
     // event Level(uint256 indexed level, uint256 indexed mistake);
-    // event AccountAuthorized(address indexed account);
+    event AccountAuthorized(address indexed account);
 
     enum newsState {CHECKING, APPROVED, DENIED}
 
@@ -56,7 +56,7 @@ contract SourceTrackingContract {
         require(msg.sender == manager, "ERROR: only manager can add account.");
         require(!_isAuthorized[account], "ERROR: this account has been authorized.");
         _isAuthorized[account] = true;
-        // emit AccountAuthorized(account);
+        emit AccountAuthorized(account);
     }
 
     modifier onlyAuthorized() {

@@ -4,25 +4,25 @@ import { connectContract } from "@/lib/connectContract";
 import { ReactUseRef } from "@/lib/type";
 import { Signer } from "ethers";
 import { Contract } from "ethers";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 type AttrType = {
   contract: ReactUseRef<Contract>,
   signer: ReactUseRef<Signer>,
-  init: () => void
+  init?: () => void
 }
 
-export function ConnectContract({ contract, signer, init }: AttrType) {
-  const isContractConnected = useRef<boolean>(false)
+export default function ConnectContract({ contract, signer, init }: AttrType) {
+  const [contractConnected, setContractConnected] = useState<boolean>(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      if(!isContractConnected.current) {
+      if(!contractConnected) {
         if(signer.current) {
           contract.current = connectContract(signer.current)
-          isContractConnected.current = true
-          console.log('YESSSSSS')
-          init()
+          setContractConnected(true)
+          if(typeof init !== 'undefined')
+            init()
         }
       }
     }, 1000)
@@ -32,5 +32,12 @@ export function ConnectContract({ contract, signer, init }: AttrType) {
     }
   }, [])
 
-  return <></>
+  return (
+    <>
+      <div>
+        <span>{'Contract Status: '}</span>
+        <span>{contractConnected ? 'Connected' : 'Not Connected'}</span>
+      </div>
+    </>
+  )
 }

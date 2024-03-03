@@ -59,6 +59,36 @@ npx hardhat --network localhost run scripts/deploy.ts
 ```
 Remember to start a local blockchain before deploying contracts.
 
+### Testing
+```
+Manager: addAccount(A)
+Manager: addAccount(B)
+Manager: addAccount(C)
+
+A transact(10 ether)
+A upload(‘abc’, ‘def’) * 10
+
+B vote(1 ~ 10, true)
+C vote(1 ~ 5, true)
+
+// B and C should get their first reward
+
+C vote(6, true)
+
+// B and C should get their second reward
+
+C vote(7 ~ 8, false)
+
+// B get reward, C doesn’t
+
+C vote(9, true)
+
+// C should not get reward
+
+
+Manager: verify(1), verify(😎, verify(9)
+```
+
 ### MAGIC
 1. [MAGIC 1](https://stackoverflow.com/questions/76607233/error-could-not-decode-result-data-value-0x-info-method-getcreatorcou)
 2. [Abi Data Decoder](https://www.moesif.com/solidity-abi-hex-decoder/decode)

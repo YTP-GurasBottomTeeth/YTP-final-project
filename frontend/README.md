@@ -15,6 +15,10 @@ npm install
 ```ts
 type ReactUseState<S> = Dispatch<SetStateAction<S | null>>
 type ReactUseRef<S> = MutableRefObject<S | null>
+type SolFuncComponentAttr = {
+  signer: ReactUseRef<Signer>,
+  contract: ReactUseRef<Contract>
+}
 ```
 
 ### `@/components/connectWallet.tsx`

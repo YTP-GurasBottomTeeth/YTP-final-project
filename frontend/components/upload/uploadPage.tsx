@@ -4,7 +4,7 @@ import { BrowserProvider, AbstractProvider, Signer, Contract, ethers } from "eth
 import { useRef, useState } from "react"
 import ConnetWallet from "../connectWallet"
 // import { connectContract } from "@/lib/connectContract"
-import { ConnectContract } from "../connectContract"
+import ConnectContract from "../connectContract"
 import { contractAddress } from "@/lib/contractInfo"
 import { callTransaction } from "@/lib/callTransaction"
 
