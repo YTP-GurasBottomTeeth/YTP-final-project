@@ -1,9 +1,9 @@
 'use client'
 
 import { useRef } from "react"
-import ConnetWallet from "../connectWallet"
+import ConnetWallet from "../lib/connectWallet"
 import { AbstractProvider, BrowserProvider, Signer } from "ethers"
-import ConnectContract from "../connectContract"
+import ConnectContract from "../lib/connectContract"
 import { Contract } from "ethers"
 import AddAccount from "./func/addAccount"
 import GetBalance from "./func/getBalance"

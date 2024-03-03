@@ -21,14 +21,14 @@ type SolFuncComponentAttr = {
 }
 ```
 
-### `@/components/connectWallet.tsx`
+### `@/components/lib/connectWallet.tsx`
 #### `<ConnectWallet provider={} signer={} />`
 - provider: `ReactUseRef<BrowserProvider | AbstractProvider>`
 - signer: `ReactUseRef<Signer>`
 
 Example
 ```tsx
-import ConnetWallet from "@/components/connectWallet"
+import ConnetWallet from "@/components/lib/connectWallet"
 
 function component() {
   const provider = useRef<BrowserProvider | AbstractProvider | null>(null)
@@ -37,6 +37,29 @@ function component() {
   return (
     <>
       <ConnectWallet provider={provider} signer={signer} />
+    </>
+  )
+}
+```
+
+### `@/components/lib/connectContract.tsx`
+#### `<ConnectContract contract={} signer={} init={} />`
+- contract: `ReactUseRef<Contract>`
+- signer: `ReactUseRef<Signer>`
+- init: `() => void`
+  - The init function after contract constructed.
+
+Example
+```tsx
+import ConnetContract from "@/components/lib/connectContract"
+
+function component() {
+  const contract = useRef<Contract | null>(null)
+  const signer = useRef<Signer | null>(null)
+
+  return (
+    <>
+      <ConnectContract contract={contract} signer={signer} init={initFunc} />
     </>
   )
 }
@@ -67,29 +90,6 @@ useEffect(() => {
 }, [])
 ```
 
-### `@/components/connectContract.tsx`
-#### `<ConnectContract contract={} signer={} init={} />`
-- contract: `ReactUseRef<Contract>`
-- signer: `ReactUseRef<Signer>`
-- init: `() => void`
-  - The init function after contract constructed.
-
-Example
-```tsx
-import ConnetContract from "@/components/connectContract"
-
-function component() {
-  const contract = useRef<Contract | null>(null)
-  const signer = useRef<Signer | null>(null)
-
-  return (
-    <>
-      <ConnectContract contract={contract} signer={signer} init={initFunc} />
-    </>
-  )
-}
-```
-
 ### `@/lib/callTransaction.ts`
 #### `callTransaction(contract: Contract, funcName: string, args: any[]): Promise<any[]>`
 A helper function for calling non view function from solidity.
@@ -97,11 +97,23 @@ A helper function for calling non view function from solidity.
 Example
 ```ts
 try {
-  const ret = await callTransaction(contract, 'upload', ['william', 'killer'])
-  const [newsIdNumber] = ret
-
+  const [newsIdNumber] = await callTransaction(contract, 'upload', ['william', 'killer'])
   console.log(await contract.current?.getURLs(newsIdNumber))
-} catch(err) {
+} catch(err: any) {
+  console.log(err)
+}
+```
+
+### `@/lib/callFunction.ts`
+#### `callFunction(contract: Contract, funcName: string, args: any[]): Promise<any[]>`
+A helper function for calling view function from solidity.
+
+Example
+```ts
+try {
+  const [balance] = await callFunction(contract, 'getBalance', [])
+  console.log(balance)
+} catch(err: any) {
   console.log(err)
 }
 ```

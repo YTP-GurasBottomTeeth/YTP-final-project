@@ -1,4 +1,3 @@
-import { error } from "console";
 import { Contract } from "ethers";
 
 async function callTransaction(contract: Contract, funcName: string, args: any[]): Promise<any[]> {

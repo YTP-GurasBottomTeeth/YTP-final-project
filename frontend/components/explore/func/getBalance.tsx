@@ -6,6 +6,7 @@ import Button from "../utility/button";
 import ErrMsg from "../utility/errMsg";
 import RetValue from "../utility/retValue";
 import { ethers } from "ethers";
+import { callFunction } from "@/lib/callFunction";
 
 export default function GetBalance({ signer, contract }: SolFuncComponentAttr) {
   const [errMsg, setErrMsg] = useState<string>('')
@@ -16,7 +17,8 @@ export default function GetBalance({ signer, contract }: SolFuncComponentAttr) {
     if(!signer.current)
       return
     try {
-      const balance = await contract.current.getBalance()
+      // const balance = await contract.current.getBalance()
+      const [balance] = await callFunction(contract.current, 'getBalance', [])
       setRetValue([
         ['balance', ethers.formatEther(balance)]
       ])

@@ -5,6 +5,7 @@ import { SolFuncComponentAttr } from "@/lib/type";
 import Button from "../utility/button";
 import { callTransaction } from "@/lib/callTransaction";
 import ErrMsg from "../utility/errMsg";
+import Input from "../utility/Input";
 
 export default function AddAccount({ signer, contract }: SolFuncComponentAttr) {
   const [errMsg, setErrMsg] = useState<string>('')
@@ -14,8 +15,12 @@ export default function AddAccount({ signer, contract }: SolFuncComponentAttr) {
     if(!signer.current)
       return
     try {
-      const addr = await signer.current.getAddress()
-      const [] = await callTransaction(contract.current, 'addAccount', [addr])
+      const doc = document.getElementById('addAccount')
+      const addressInput = doc?.querySelector('#address')
+      if(addressInput instanceof HTMLInputElement) {
+        const address = addressInput.value
+        await callTransaction(contract.current, 'addAccount', [address])
+      }
     } catch(err: any) {
       console.log(err)
       setErrMsg(err)
@@ -25,6 +30,7 @@ export default function AddAccount({ signer, contract }: SolFuncComponentAttr) {
   return (
     <>
       <div id='addAccount'>
+        <Input label="address" />
         <Button text={'Add Account'} onClick={submit} />
         <ErrMsg msg={errMsg} />
       </div>

@@ -5,6 +5,7 @@ import { SolFuncComponentAttr } from "@/lib/type";
 import Button from "../utility/button";
 import ErrMsg from "../utility/errMsg";
 import RetValue from "../utility/retValue";
+import { callFunction } from "@/lib/callFunction";
 
 export default function GetLevel({ signer, contract }: SolFuncComponentAttr) {
   const [errMsg, setErrMsg] = useState<string>('')
@@ -15,7 +16,8 @@ export default function GetLevel({ signer, contract }: SolFuncComponentAttr) {
     if(!signer.current)
       return
     try {
-      const [level, mistake] = await contract.current.getLevel()
+      // const [level, mistake] = await contract.current.getLevel()
+      const [level, mistake] = await callFunction(contract.current, 'getLevel', [])
       setRetValue([
         ['level', level],
         ['mistake', mistake]
