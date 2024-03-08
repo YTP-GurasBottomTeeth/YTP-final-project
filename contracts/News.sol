@@ -105,6 +105,10 @@ contract SourceTrackingContract {
         _givenEther[Receiver] -= amount;
         // emit Reward(Receiver, amount);
     }
+
+    function isManager() view public returns (bool) {
+        return msg.sender == manager; 
+    }
     
     function upload(string memory newsURL_, string memory sourceURL_) onlyAuthorized public returns (uint256 newsId) {
         uint256 _newsId = ++totalNews;

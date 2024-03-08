@@ -5,7 +5,7 @@ import { BrowserProvider } from "ethers";
 import { Signer } from "ethers";
 import AccountInfo from "@/components/account/accountInfo";
 import { useRef } from "react";
-import ConnetWallet from "@/components/connectWallet";
+import ConnetWallet from "@/components/lib/connectWallet";
 
 export default function AccountPage() {
   const provider = useRef<BrowserProvider | AbstractProvider | null>(null)
