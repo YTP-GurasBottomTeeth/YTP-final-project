@@ -36,7 +36,7 @@ export default function VerifyPage({ newsId }: { newsId: BigInt }) {
       clearInterval(interval)
       window.removeEventListener('login', listener)
     }
-  }, [])
+  }, [newsId])
 
   return (
     <>
