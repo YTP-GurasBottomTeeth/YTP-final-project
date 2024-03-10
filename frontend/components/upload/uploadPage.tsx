@@ -1,11 +1,11 @@
 'use client'
 
 import { BrowserProvider, AbstractProvider, Signer, Contract } from "ethers"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { callFunction } from "@/lib/callFunction"
 import Upload from "./upload"
 import BalanceViewer from "../lib/balanceViewer"
-import Login from "../login/login"
+import Login from "../lib/login/login"
 
 export default function UploadPage() {
   const provider = useRef<BrowserProvider | AbstractProvider | null>(null)
@@ -13,11 +13,17 @@ export default function UploadPage() {
   const contract = useRef<Contract | null>(null)
   const [isManager, setIsManager] = useState<boolean>(false)
   const [login, setLogin] = useState<boolean>(false)
-  const interval = setInterval(async () => {
-    if(!contract.current) return
-    const [_isManager] = await callFunction(contract.current, 'isManager', [])
-    setIsManager(_isManager)
-  }, 500)
+
+  useEffect(() => {
+    const listener = async () => {
+      if(!contract.current) return
+      const [_isManager] = await callFunction(contract.current, 'isManager', [])
+      setIsManager(_isManager)
+    }
+    window.addEventListener('login', listener)
+
+    return () => window.removeEventListener('login', listener)
+  }, [])
 
   return (
     <>
@@ -35,7 +41,6 @@ export default function UploadPage() {
               signer={signer}
               provider={provider}
               setLoginStatus={setLogin}
-              init={() => clearInterval(interval)}
             />
           </div>
         </div>

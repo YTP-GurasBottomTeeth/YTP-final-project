@@ -34,12 +34,17 @@ export default function Login({ provider, signer, contract, setLoginStatus, init
             setLoginStatus(true)
           if(typeof init !== 'undefined')
             init()
+          dispatchEvent(new Event('login'))
         }
       }
     }, 500)
 
+    const listener = () => clearInterval(interval)
+    window.addEventListener('login', listener)
+
     return () => {
       clearInterval(interval)
+      window.removeEventListener('login', listener)
     }
   }, [contract, signer, init, setLoginStatus, status])
 
