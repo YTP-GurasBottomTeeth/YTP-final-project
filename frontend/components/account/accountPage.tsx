@@ -3,8 +3,8 @@
 import { AbstractProvider, ethers } from "ethers";
 import { BrowserProvider } from "ethers";
 import { Signer } from "ethers";
-import { useRef, useState } from "react";
-import Login from "../login/login";
+import { useEffect, useRef, useState } from "react";
+import Login from "../lib/login/login";
 import { Contract } from "ethers";
 import Viewer from "./Viewer";
 import { callFunction } from "@/lib/callFunction";
@@ -24,25 +24,22 @@ export default function AccountPage() {
   const [level, setLevel] = useState<string>("?")
   const [mistake, setMistake] = useState<string>("?")
   const getLevelFormat = (v: string) => v.toString()
-  const interval = setInterval(async () => {
-    if(!contract.current) return
-    try {
-      const [_balance] = await callFunction(contract.current, 'getBalance', [])
-      const [_isManager] = await callFunction(contract.current, 'isManager', [])
-      const [_level, _mistake] = await callFunction(contract.current, 'getLevel', [])
-      const _address = await signer.current?.getAddress()
-      setBalance(ethers.formatEther(_balance) + " TKS")
-      setLevel(getLevelFormat(_level))
-      setMistake(getLevelFormat(_mistake))
-      setIsManagr(_isManager)
-      if(_address) setAddress(_address)
-    } catch(err: any) {
-      setErrMsg(err)
+
+  useEffect(() => {
+    const listener = async () => {
+      if(!contract.current) return
+      try {
+        const [_isManager] = await callFunction(contract.current, 'isManager', [])
+        const _address = await signer.current?.getAddress()
+        setIsManagr(_isManager)
+        if(_address) setAddress(_address)
+      } catch(err: any) {
+        setErrMsg(err)
+      }
     }
-  }, 300)
-  const loginInit = () => {
-    clearInterval(interval)
-    setInterval(async () => {
+    window.addEventListener('login', listener)
+
+    const interval = setInterval(async () => {
       if(!contract.current) return
       try {
         const [_balance] = await callFunction(contract.current, 'getBalance', [])
@@ -54,7 +51,12 @@ export default function AccountPage() {
         setErrMsg(err)
       }
     }, 500)
-  }
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('login', listener)
+    }
+  }, [])
 
   return (
     <>
@@ -99,7 +101,6 @@ export default function AccountPage() {
               signer={signer}
               contract={contract}
               setLoginStatus={setLogin}
-              init={loginInit}
             />
           </div>
         </div>

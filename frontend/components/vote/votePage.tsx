@@ -1,13 +1,13 @@
 'use client'
 
 import { BrowserProvider, AbstractProvider, Signer, Contract } from "ethers"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { callFunction } from "@/lib/callFunction"
 import Viewer from "./Viewer"
 import Button from "./button"
 import { callTransaction } from "@/lib/callTransaction"
 import ErrMsg from "./errMsg"
-import Login from "../login/login"
+import Login from "../lib/login/login"
 import URLBadge from "../lib/badge/urlBadge"
 import NewsStatusBadge from "../lib/badge/newsStatusBadge"
 
@@ -20,17 +20,30 @@ export default function VotePage({ newsId }: { newsId: BigInt }) {
   const [errMsg, setErrMsg] = useState<string>("")
   const [newsURL, setNewsURL] = useState<string>("?")
   const [sourceURL, setSourceURL] = useState<string>("?")
-  const [newsState, setNewsState] = useState<string>("?")
-  const interval = setInterval(async () => {
-    if(!contract.current) return
-    const [_newsURL, _sourceURL] = await callFunction(contract.current, 'getURLs', [newsId])
-    const [_newsState] = await callFunction(contract.current, 'verify', [newsId])
-    const [_isVoted] = await callFunction(contract.current, 'isVoted', [newsId])
-    setNewsURL(_newsURL)
-    setSourceURL(_sourceURL)
-    setNewsState(_newsState)
-    setIsVoted(_isVoted)
-  }, 500)
+  const [newsState, setNewsState] = useState<string>("Unknown")
+
+  useEffect(() => {
+    const listener = async () => {
+      if(!contract.current) return
+      const [_newsURL, _sourceURL] = await callFunction(contract.current, 'getURLs', [newsId])
+      setNewsURL(_newsURL)
+      setSourceURL(_sourceURL)
+    }
+    window.addEventListener('login', listener)
+
+    const interval = setInterval(async () => {
+      if(!contract.current) return
+      const [_newsState] = await callFunction(contract.current, 'verify', [newsId])
+      const [_isVoted] = await callFunction(contract.current, 'isVoted', [newsId])
+      setNewsState(_newsState)
+      setIsVoted(_isVoted)
+    }, 500)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('login', listener)
+    }
+  }, [newsId])
 
   const submit = async (approve: boolean) => {
     if(!contract.current) return
@@ -68,7 +81,6 @@ export default function VotePage({ newsId }: { newsId: BigInt }) {
               provider={provider}
               contract={contract}
               setLoginStatus={setLogin}
-              init={() => clearInterval(interval)}
             />
           </div>
         </div>
