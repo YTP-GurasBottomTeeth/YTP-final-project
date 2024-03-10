@@ -23,7 +23,7 @@ export default function AccountPage() {
   const [address, setAddress] = useState<string>("?")
   const [level, setLevel] = useState<string>("?")
   const [mistake, setMistake] = useState<string>("?")
-  const getLevelFormat = (v: string) => ethers.formatEther(v).replace('.0', '')
+  const getLevelFormat = (v: string) => v.toString()
   const interval = setInterval(async () => {
     if(!contract.current) return
     try {
