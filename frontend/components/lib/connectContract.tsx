@@ -30,7 +30,7 @@ export default function ConnectContract({ contract, signer, init }: AttrType) {
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [contract, signer, init, contractConnected])
 
   return (
     <>
