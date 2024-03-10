@@ -6,8 +6,8 @@ export default function Viewer({ label, value }: { label: string, value: string 
   return (
     <>
       <div className='my-4'>
-        <span className='w-[20%] inline-flex justify-start'>{label + ": "}</span>
-        <span className='w-[80%] inline-flex justify-end truncate'>{value}</span>
+        <span className='w-[25%] inline-flex justify-start'>{label + ": "}</span>
+        <span className='w-[75%] inline-flex justify-end truncate'>{value}</span>
       </div>
     </>
   )

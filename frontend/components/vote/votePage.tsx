@@ -2,52 +2,76 @@
 
 import { BrowserProvider, AbstractProvider, Signer, Contract } from "ethers"
 import { useRef, useState } from "react"
-import ConnectContract from "../lib/connectContract"
-import ConnetWallet from "../lib/connectWallet"
 import { callFunction } from "@/lib/callFunction"
-import { useRouter } from "next/navigation"
 import Viewer from "./Viewer"
 import Button from "./button"
 import { callTransaction } from "@/lib/callTransaction"
 import ErrMsg from "./errMsg"
+import Login from "../login/login"
+import URLBadge from "../lib/badge/urlBadge"
+import NewsStatusBadge from "../lib/badge/newsStatusBadge"
 
-export default async function VotePage({ newsId }: { newsId: BigInt }) {
+export default function VotePage({ newsId }: { newsId: BigInt }) {
   const provider = useRef<BrowserProvider | AbstractProvider | null>(null)
   const signer = useRef<Signer | null>(null)
   const contract = useRef<Contract | null>(null)
-  const router = useRouter()
+  const [login, setLogin] = useState<boolean>(false)
+  const [isVoted, setIsVoted] = useState<boolean>(false)
   const [errMsg, setErrMsg] = useState<string>("")
+  const [newsURL, setNewsURL] = useState<string>("?")
+  const [sourceURL, setSourceURL] = useState<string>("?")
+  const [newsState, setNewsState] = useState<string>("?")
+  const interval = setInterval(async () => {
+    if(!contract.current) return
+    const [_newsURL, _sourceURL] = await callFunction(contract.current, 'getURLs', [newsId])
+    const [_newsState] = await callFunction(contract.current, 'verify', [newsId])
+    const [_isVoted] = await callFunction(contract.current, 'isVoted', [newsId])
+    setNewsURL(_newsURL)
+    setSourceURL(_sourceURL)
+    setNewsState(_newsState)
+    setIsVoted(_isVoted)
+  }, 500)
 
-  if(!contract.current) {
-    router.push('/internal-error')
-    return
-  }
-  const [newsURL, sourceURL] = await callFunction(contract.current, 'getURLs', [newsId])
-  const [newsState] = await callFunction(contract.current, 'verify', [newsId])
   const submit = async (approve: boolean) => {
     if(!contract.current) return
     try {
       await callTransaction(contract.current, 'vote', [newsId, approve])
-      router.push(`/vote/${newsId}`)
     } catch(err: any) {
-      setErrMsg(err)
+      setErrMsg(err.toString())
     }
   }
 
   return (
     <>
-      <div>
-        <ConnetWallet provider={provider} signer={signer} />
-        <ConnectContract contract={contract} signer={signer} />
-      </div>
-      <div id='vote'>
-        <Viewer label="News ID" value={newsId.toString()} />
-        <Viewer label="News Status" value={newsState} />
-        <Viewer label="News URL" value={newsURL} />
-        <Viewer label="Source URL" value={sourceURL} />
-        <Button text="Deny" onClick={() => submit(false)} />
-        <Button text="Approve" onClick={() => submit(true)} />
-        <ErrMsg msg={errMsg} />
+      <div className="flex justify-center items-center w-screen h-screen">
+        <div className="block w-[35%] h-[35%]">
+          <div id='vote'>
+            <Viewer label="News ID" value={newsId.toString()} />
+            <Viewer label="News Status" value={<NewsStatusBadge status={newsState} />} />
+            <Viewer label="News URL" value={<URLBadge url={newsURL} />} />
+            <Viewer label="Source URL" value={<URLBadge url={sourceURL} />} />
+            <div className='flex w-full justify-center items-center'>
+              <div className="block w-[30%]">
+                <div className="inline-block w-[50%]">
+                  <Button type='Deny' text="Deny" onClick={() => submit(false)} disable={!login || isVoted}/>
+                </div>
+                <div className="inline-flex w-[50%] justify-end">
+                  <Button type='Approve' text="Approve" onClick={() => submit(true)} disable={!login || isVoted}/>
+                </div>
+              </div>
+            </div>
+            <ErrMsg msg={errMsg} />
+          </div>
+          <div className="flex justify-center items-center mt-16">
+            <Login
+              signer={signer}
+              provider={provider}
+              contract={contract}
+              setLoginStatus={setLogin}
+              init={() => clearInterval(interval)}
+            />
+          </div>
+        </div>
       </div>
     </>
   )

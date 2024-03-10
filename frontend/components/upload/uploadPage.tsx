@@ -1,37 +1,44 @@
 'use client'
 
 import { BrowserProvider, AbstractProvider, Signer, Contract } from "ethers"
-import { useRef } from "react"
-import ConnetWallet from "../lib/connectWallet"
-import ConnectContract from "../lib/connectContract"
+import { useRef, useState } from "react"
 import { callFunction } from "@/lib/callFunction"
-import { useRouter } from "next/navigation"
 import Upload from "./upload"
-import ManagerUpload from "./managerUpload"
 import BalanceViewer from "../lib/balanceViewer"
+import Login from "../login/login"
 
-export default async function UploadPage() {
+export default function UploadPage() {
   const provider = useRef<BrowserProvider | AbstractProvider | null>(null)
   const signer = useRef<Signer | null>(null)
   const contract = useRef<Contract | null>(null)
-  const router = useRouter()
-
-  if(!contract.current) {
-    router.push('/internal-error')
-    return
-  }
-
-  const [isManager] = await callFunction(contract.current, 'isManager', [])
+  const [isManager, setIsManager] = useState<boolean>(false)
+  const [login, setLogin] = useState<boolean>(false)
+  const interval = setInterval(async () => {
+    if(!contract.current) return
+    const [_isManager] = await callFunction(contract.current, 'isManager', [])
+    setIsManager(_isManager)
+  }, 500)
 
   return (
     <>
-      <div>
-        <ConnetWallet provider={provider} signer={signer} />
-        <ConnectContract contract={contract} signer={signer} />
-      </div>
-      <div>
-        <BalanceViewer contract={contract} />
-        { isManager ? <ManagerUpload contract={contract} /> : <Upload contract={contract} /> }
+      <div className='flex justify-center items-center h-screen w-screen'>
+        <div className='block h-[35%] w-[40%]'>
+          <div className='h-[80%] w-full mb-15'>
+            <Upload type={isManager} contract={contract} login={login} /> 
+          </div>
+          <div className='h-[10%] w-full mb-7 flex justify-center items-center'>
+            <BalanceViewer contract={contract} />
+          </div>
+          <div className='h-[10%] w-full mb-5 flex justify-center items-center'>
+            <Login
+              contract={contract}
+              signer={signer}
+              provider={provider}
+              setLoginStatus={setLogin}
+              init={() => clearInterval(interval)}
+            />
+          </div>
+        </div>
       </div>
     </>
   )

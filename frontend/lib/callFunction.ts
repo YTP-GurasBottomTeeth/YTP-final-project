@@ -9,6 +9,8 @@ async function callFunction(contract: Contract, funcName: string, args: any[]): 
       return res
     }
   } catch(err: any) {
+    if(err.reason === undefined)
+      throw err
     throw err.reason
   }
 }

@@ -109,6 +109,10 @@ contract SourceTrackingContract {
     function isManager() view public returns (bool) {
         return msg.sender == manager; 
     }
+
+    function isVoted(uint256 newsId) view public returns(bool) {
+        return _isVoted[newsId][msg.sender];
+    }
     
     function upload(string memory newsURL_, string memory sourceURL_) onlyAuthorized public returns (uint256 newsId) {
         uint256 _newsId = ++totalNews;

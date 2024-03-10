@@ -4,7 +4,7 @@ import { Contract } from "ethers";
 import { BrowserProvider } from "ethers";
 import { contractAbi, contractAddress } from "./contractInfo";
 
-function connectContract(owner: Signer | BrowserProvider | AbstractProvider) {
+function connectContract(owner?: Signer | BrowserProvider | AbstractProvider) {
   const contract = new Contract(contractAddress, contractAbi, owner)
   return contract
 }
