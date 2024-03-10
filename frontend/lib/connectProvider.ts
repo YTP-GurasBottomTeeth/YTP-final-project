@@ -5,7 +5,7 @@ export function getProvider() {
 
   if(typeof window === 'undefined') {
     provider = ethers.getDefaultProvider()
-  } else if(window.ethereum == null) {
+  } else if(window.ethereum === undefined) {
     // MetaMask not installed. Using read-only defaults.
     provider = ethers.getDefaultProvider();
   } else {

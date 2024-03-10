@@ -4,7 +4,6 @@ import { getProvider } from "@/lib/connectProvider"
 import { ReactUseRef } from "@/lib/type"
 import { AbstractProvider, Contract, Signer } from "ethers"
 import { BrowserProvider } from "ethers"
-import { init } from "next/dist/compiled/webpack/webpack"
 import { Dispatch, SetStateAction, useEffect, useState } from "react"
 import { connectContract } from "@/lib/connectContract"
 
@@ -42,7 +41,7 @@ export default function Login({ provider, signer, contract, setLoginStatus, init
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [contract, signer, init, setLoginStatus, status])
 
   return <button className='p-2 px-3 border rounded bg-blue-500 text-white transition-color duration-300 disabled:bg-gray-300 select-none' onClick={onClick} disabled={status}>{"Login"}</button>
 }

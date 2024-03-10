@@ -23,7 +23,7 @@ export default function BalanceViewer({ contract }: { contract: ReactUseRef<Cont
     return () => {
       clearInterval(interval)
     }
-  }, [])
+  }, [contract])
 
   return (
     <>
