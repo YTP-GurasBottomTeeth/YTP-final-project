@@ -2,11 +2,11 @@
 
 import { callFunction } from "@/lib/callFunction";
 import { ReactUseRef } from "@/lib/type";
-import { Contract } from "ethers";
+import { Contract, ethers } from "ethers";
 import { useEffect, useState } from "react";
 
 export default function BalanceViewer({ contract }: { contract: ReactUseRef<Contract> }) {
-  const [balance, setBalance] = useState<string>("")
+  const [balance, setBalance] = useState<string>("?")
   
   useEffect(() => {
     const interval = setInterval(async () => {
@@ -14,11 +14,11 @@ export default function BalanceViewer({ contract }: { contract: ReactUseRef<Cont
       
       try {
         const [_balance] = await callFunction(contract.current, 'getBalance', [])
-        setBalance(_balance.toString())
+        setBalance(ethers.formatEther(_balance))
       } catch(err) {
         console.log(err)
       }
-    }, 3000)
+    }, 500)
 
     return () => {
       clearInterval(interval)
@@ -27,9 +27,11 @@ export default function BalanceViewer({ contract }: { contract: ReactUseRef<Cont
 
   return (
     <>
-      <div>
-        <span>{"Account Balance: "}</span>
-        <span>{balance}</span>
+      <div className='mt-3 w-[40%]'>
+        <span className='w-[50%] inline-block'>{"Account Balance: "}</span>
+        <span className='w-[50%] inline-flex justify-end'>
+          <span>{balance + " TKS"}</span>
+        </span>
       </div>
     </>
   )

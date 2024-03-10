@@ -60,34 +60,25 @@ npx hardhat --network localhost run scripts/deploy.ts
 Remember to start a local blockchain before deploying contracts.
 
 ### Testing
+- Account Address
 ```
-Manager: addAccount(A)
-Manager: addAccount(B)
-Manager: addAccount(C)
+Account #A: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266 (10000 ETH)
+Private Key: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
 
-A transact(10 ether)
-A upload(‘abc’, ‘def’) * 10
+Account #B: 0x70997970C51812dc3A010C7d01b50e0d17dc79C8 (10000 ETH)
+Private Key: 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d
 
-B vote(1 ~ 10, true)
-C vote(1 ~ 5, true)
+Account #C: 0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC (10000 ETH)
+Private Key: 0x5de4111afa1a4b94908f83103eb1f1706367c2e68ca870fc3fb9a804cdab365a
 
-// B and C should get their first reward
+Account #D: 0x90F79bf6EB2c4f870365E785982E1f101E93b906 (10000 ETH)
+Private Key: 0x7c852118294e51e653712a81e05800f419141751be58f605c371e15141b007a6
 
-C vote(6, true)
-
-// B and C should get their second reward
-
-C vote(7 ~ 8, false)
-
-// B get reward, C doesn’t
-
-C vote(9, true)
-
-// C should not get reward
-
-
-Manager: verify(1), verify(😎, verify(9)
+Account #E: 0x15d34AAf54267DB7D7c367839AAf71A00a2C6A65 (10000 ETH)
+Private Key: 0x47e179ec197488593b187f80a00eb0da91f1b9d0b13f8733639f19c30a34926a
 ```
+- Test Case
+[test_case.pdf](./test/test_case.pdf)
 
 ### MAGIC
 1. [MAGIC 1](https://stackoverflow.com/questions/76607233/error-could-not-decode-result-data-value-0x-info-method-getcreatorcou)
