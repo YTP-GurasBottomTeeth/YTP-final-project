@@ -1,12 +1,11 @@
 'use client'
 
-import { BrowserProvider, AbstractProvider, Signer, Contract } from "ethers"
+import { BrowserProvider, AbstractProvider, Signer, Contract, ethers } from "ethers"
 import { useEffect, useRef, useState } from "react"
 import Viewer from "./Viewer"
 import { callFunction } from "@/lib/callFunction"
 import URLBadge from "../lib/badge/urlBadge"
 import NewsStatusBadge from "../lib/badge/newsStatusBadge"
-import { getProvider } from "@/lib/connectProvider"
 import { connectContract } from "@/lib/connectContract"
 
 export default function VerifyPage({ newsId }: { newsId: BigInt }) {
@@ -18,7 +17,7 @@ export default function VerifyPage({ newsId }: { newsId: BigInt }) {
 
   useEffect(() => {
     const init = () => {
-      provider.current = getProvider()
+      provider.current = ethers.getDefaultProvider('http://localhost:8545/')
       contract.current = connectContract(provider.current)
       dispatchEvent(new Event('connected'))
     }
